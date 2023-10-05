@@ -83,7 +83,7 @@ qm resize 9000 scsi0 +50G
 qm template 9000
 ```
 
-##
+## Deploymnt Ubuntu
 
 vi srvdemo1.tf
 ```
@@ -127,6 +127,37 @@ resource "proxmox_vm_qemu" "srv_demo_1" {
         ciuser = "ubuntu"
 }
 ```
+
+
+## Cloudinit Image erstellen (Debian 12) in Proxmox
+
+```
+cd /var/lib/vz/template/iso/
+wget [https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img](https://cloud.debian.org/images/cloud/bookworm/20230723-1450/debian-12-generic-amd64-20230723-1450.raw)
+apt update -y && apt install libguestfs-tools -y
+virt-customize -a cd /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --install qemu-guest-agent
+virt-customize -a cd /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --root-password password:relation
+virt-customize -a cd /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --run-command "echo -n > /etc/machine-id"
+```
+
+## Template erstellen (Debian 12) in Proxmox
+
+Aus dem Cloud-Image jammy-server-cloudimg-amd64.img wird nun ein VM-Template erzeugt
+```
+qm create 9001 --name "debian12-ci" --memory 8096 --cores 2 --net0 virtio,bridge=vmbr0
+qm importdisk 9001 /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw local-lvm
+qm set 9001 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9001-disk-0
+qm set 9001 --boot c --bootdisk scsi0
+qm set 9001 --ide2 local-lvm:cloudinit
+qm set 9001 --serial0 socket --vga serial0
+qm set 9001 --agent enabled=1
+qm resize 9001 scsi0 +50G
+qm template 9001
+```
+
+
+
+
 
 
 
