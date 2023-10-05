@@ -135,9 +135,9 @@ resource "proxmox_vm_qemu" "srv_demo_1" {
 cd /var/lib/vz/template/iso/
 wget https://cloud.debian.org/images/cloud/bookworm/20230723-1450/debian-12-generic-amd64-20230723-1450.raw
 apt update -y && apt install libguestfs-tools -y
-virt-customize -a cd /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --install qemu-guest-agent
-virt-customize -a cd /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --root-password password:relation
-virt-customize -a cd /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --run-command "echo -n > /etc/machine-id"
+virt-customize -a /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --install qemu-guest-agent
+virt-customize -a /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --root-password password:relation
+virt-customize -a /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --run-command "echo -n > /etc/machine-id"
 ```
 
 ## Template erstellen (Debian 12) in Proxmox
