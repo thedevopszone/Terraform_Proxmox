@@ -133,7 +133,7 @@ resource "proxmox_vm_qemu" "srv_demo_1" {
 
 ```
 cd /var/lib/vz/template/iso/
-wget [https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img](https://cloud.debian.org/images/cloud/bookworm/20230723-1450/debian-12-generic-amd64-20230723-1450.raw)
+wget https://cloud.debian.org/images/cloud/bookworm/20230723-1450/debian-12-generic-amd64-20230723-1450.raw
 apt update -y && apt install libguestfs-tools -y
 virt-customize -a cd /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --install qemu-guest-agent
 virt-customize -a cd /var/lib/vz/template/iso/debian-12-generic-amd64-20230723-1450.raw --root-password password:relation
